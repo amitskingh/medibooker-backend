@@ -1,5 +1,7 @@
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from accounts.permissions import IsDoctor, IsPatient
+from rest_framework import status
 from utils.response import success_response, error_response
 from .models import Slot
 from accounts.models import Doctor
@@ -41,6 +43,33 @@ class DoctorSlotsView(APIView):
         # Save
         serializer.save(doctor=doctor)
         return success_response("Slot created successfully", serializer.data, 201)
+
+
+class DoctorSlotDetailView(APIView):
+    permission_classes = [IsDoctor]
+
+    def delete(self, request, slot_id):
+        doctor = request.user.doctor_profile
+        slot = get_object_or_404(Slot, id=slot_id)
+
+        # Ensure the slot belongs to the doctor
+        if slot.doctor != doctor:
+            return error_response(
+                "You are not allowed to delete this slot.",
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Prevent deleting a booked slot
+        if slot.is_booked:
+            return error_response(
+                "Cannot delete a slot that is already booked.",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        slot.delete()
+        return success_response(
+            "Slot deleted successfully", status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class SlotsListView(APIView):

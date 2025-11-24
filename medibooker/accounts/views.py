@@ -9,7 +9,7 @@ from .serializers import (
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Doctor, Patient
-from .permissions import IsPatient
+from .permissions import IsPatient, IsAdmin
 from .serializers import DoctorSerializer
 from rest_framework.permissions import IsAuthenticated
 
@@ -27,7 +27,7 @@ class DoctorRegisterView(APIView):
 
 
 class DoctorListView(APIView):
-    permission_classes = [IsPatient]
+    permission_classes = [IsPatient | IsAdmin]
 
     def get(self, request):
         specialization = request.GET.get("specialization")
@@ -39,6 +39,15 @@ class DoctorListView(APIView):
 
         serializer = DoctorSerializer(qs, many=True)
         return success_response("Doctors fetched", serializer.data)
+
+
+class PatientListView(APIView):
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        qs = Patient.objects.select_related("user").all()
+        serializer = PatientSerializer(qs, many=True)
+        return success_response("Patients fetched", serializer.data)
 
 
 class SpecializationListView(APIView):

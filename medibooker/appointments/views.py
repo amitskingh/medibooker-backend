@@ -111,7 +111,7 @@ class DoctorUpdateAppointmentStatusView(APIView):
 
 
 class AdminAppointmentsOverviewView(APIView):
-    # permission_classes = [IsAdmin]
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         appointments = (
