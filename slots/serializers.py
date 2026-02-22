@@ -1,6 +1,8 @@
-from rest_framework import serializers
-from django.utils import timezone
 from datetime import datetime
+
+from django.utils import timezone
+from rest_framework import serializers
+
 from .models import Slot
 
 
@@ -17,9 +19,7 @@ class SlotSerializer(serializers.ModelSerializer):
 
         # 1. Start < End check
         if start >= end:
-            raise serializers.ValidationError(
-                {"time": "End time must be greater than start time."}
-            )
+            raise serializers.ValidationError({"time": "End time must be greater than start time."})
 
         # 2. Combine date + time as aware datetime
         slot_start_dt = datetime.combine(slot_date, start)
@@ -29,8 +29,6 @@ class SlotSerializer(serializers.ModelSerializer):
 
         # 3. Prevent creating past slots
         if slot_start_dt <= now:
-            raise serializers.ValidationError(
-                {"date": "Cannot create a slot in the past."}
-            )
+            raise serializers.ValidationError({"date": "Cannot create a slot in the past."})
 
         return attrs

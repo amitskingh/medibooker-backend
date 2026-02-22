@@ -1,12 +1,13 @@
 from django.urls import path
+
 from .views import (
-    DoctorRegisterView,
-    PatientRegisterView,
-    EmailLoginView,
-    SpecializationListView,
     DoctorListView,
-    UserProfile,
+    DoctorRegisterView,
+    EmailLoginView,
     PatientListView,
+    PatientRegisterView,
+    SpecializationListView,
+    UserProfile,
 )
 
 urlpatterns = [

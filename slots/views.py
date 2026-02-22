@@ -1,10 +1,12 @@
-from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from accounts.permissions import IsDoctor, IsPatient
 from rest_framework import status
-from utils.response import success_response, error_response
-from .models import Slot
+from rest_framework.views import APIView
+
 from accounts.models import Doctor
+from accounts.permissions import IsDoctor
+from utils.response import error_response, success_response
+
+from .models import Slot
 from .serializers import SlotSerializer
 
 
@@ -29,9 +31,7 @@ class DoctorSlotsView(APIView):
         end = serializer.validated_data["end_time"]
 
         # Duplicate slot check
-        if Slot.objects.filter(
-            doctor=doctor, date=date, start_time=start, end_time=end
-        ).exists():
+        if Slot.objects.filter(doctor=doctor, date=date, start_time=start, end_time=end).exists():
             return error_response("This exact slot already exists for the doctor.")
 
         # Overlap check
@@ -67,9 +67,7 @@ class DoctorSlotDetailView(APIView):
             )
 
         slot.delete()
-        return success_response(
-            "Slot deleted successfully", status=status.HTTP_204_NO_CONTENT
-        )
+        return success_response("Slot deleted successfully", status=status.HTTP_204_NO_CONTENT)
 
 
 class SlotsListView(APIView):

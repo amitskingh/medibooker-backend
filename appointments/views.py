@@ -1,11 +1,10 @@
-from rest_framework.views import APIView
-from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 
-from utils.response import success_response, error_response
-from accounts.permissions import IsPatient, IsDoctor, IsAdmin
-from accounts.models import Patient, Doctor
+from accounts.permissions import IsAdmin, IsDoctor, IsPatient
 from slots.models import Slot
+from utils.response import error_response, success_response
+
 from .models import Appointment
 from .serializers import AppointmentSerializer
 
@@ -45,9 +44,7 @@ class PatientBookAppointmentView(APIView):
         slot.save()
 
         serializer = AppointmentSerializer(appointment)
-        return success_response(
-            "Appointment booked successfully", serializer.data, status=201
-        )
+        return success_response("Appointment booked successfully", serializer.data, status=201)
 
 
 class PatientAppointmentsListView(APIView):
@@ -89,9 +86,7 @@ class DoctorUpdateAppointmentStatusView(APIView):
 
         # Ensure this appointment belongs to the doctor
         if appointment.doctor != doctor:
-            return error_response(
-                "You are not allowed to update this appointment", status=403
-            )
+            return error_response("You are not allowed to update this appointment", status=403)
 
         new_status = request.data.get("status")
 

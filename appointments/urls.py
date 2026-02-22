@@ -1,10 +1,11 @@
 from django.urls import path
+
 from .views import (
-    PatientBookAppointmentView,
-    PatientAppointmentsListView,
+    AdminAppointmentsOverviewView,
     DoctorAppointmentsListView,
     DoctorUpdateAppointmentStatusView,
-    AdminAppointmentsOverviewView,
+    PatientAppointmentsListView,
+    PatientBookAppointmentView,
 )
 
 urlpatterns = [

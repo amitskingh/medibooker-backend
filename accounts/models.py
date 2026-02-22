@@ -1,8 +1,8 @@
-from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
+from django.db import models
 
 from .managers import UserManager
 
@@ -11,7 +11,6 @@ from .managers import UserManager
 # Custom User Model
 # -------------------------
 class User(AbstractBaseUser, PermissionsMixin):
-
     ROLE_CHOICES = (
         ("doctor", "Doctor"),
         ("patient", "Patient"),
@@ -52,9 +51,7 @@ class Doctor(models.Model):
         ("pediatrics", "Pediatrics"),
     ]
 
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="doctor_profile"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="doctor_profile")
     specialization = models.CharField(max_length=50, choices=SPECIALIZATION_CHOICES)
 
     def __str__(self):
@@ -65,9 +62,7 @@ class Doctor(models.Model):
 # Patient Profile
 # -------------------------
 class Patient(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="patient_profile"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="patient_profile")
     phone_number = models.CharField(max_length=20)
 
     def __str__(self):

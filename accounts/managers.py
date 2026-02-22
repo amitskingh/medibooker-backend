@@ -7,7 +7,6 @@ from django.contrib.auth.models import (
 # Custom User Manager
 # -------------------------
 class UserManager(BaseUserManager):
-
     def create_user(self, email, password=None, role=None, **extra_fields):
         if not email:
             raise ValueError("Email address is required")
@@ -20,9 +19,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **extra_fields):
         """Superuser is also admin role"""
-        user = self.create_user(
-            email=email, password=password, role="admin", **extra_fields
-        )
+        user = self.create_user(email=email, password=password, role="admin", **extra_fields)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)

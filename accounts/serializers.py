@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from .models import User, Doctor, Patient
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
+
+from .models import Doctor, Patient
 
 UserModel = get_user_model()
 
@@ -48,9 +49,7 @@ class DoctorRegisterSerializer(serializers.Serializer):
         valid_choices = [choice[0] for choice in Doctor.SPECIALIZATION_CHOICES]
 
         if value not in valid_choices:
-            raise serializers.ValidationError(
-                f"Invalid specialization. Allowed: {valid_choices}"
-            )
+            raise serializers.ValidationError(f"Invalid specialization. Allowed: {valid_choices}")
         return value
 
     def validate_email(self, value):
@@ -67,9 +66,7 @@ class DoctorRegisterSerializer(serializers.Serializer):
             role="doctor",
         )
 
-        Doctor.objects.create(
-            user=user, specialization=validated_data["specialization"]
-        )
+        Doctor.objects.create(user=user, specialization=validated_data["specialization"])
 
         return user
 

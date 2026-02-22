@@ -1,17 +1,19 @@
+from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from utils.response import success_response, error_response
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from utils.response import error_response, success_response
+
+from .models import Doctor, Patient
+from .permissions import IsAdmin, IsPatient
 from .serializers import (
     DoctorRegisterSerializer,
+    DoctorSerializer,
     PatientRegisterSerializer,
     PatientSerializer,
     UserSerializer,
 )
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Doctor, Patient
-from .permissions import IsPatient, IsAdmin
-from .serializers import DoctorSerializer
-from rest_framework.permissions import IsAuthenticated
 
 
 class DoctorRegisterView(APIView):
