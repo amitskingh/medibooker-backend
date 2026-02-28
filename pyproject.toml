@@ -9,7 +9,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "DJ"]
+select = ["E", "F", "I", "UP", "DJ", "W"]
 ignore = ["E501"]  # Ignore long line errors (optional)
 
 [tool.ruff.format]
