@@ -9,7 +9,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]  # Errors, Pyflakes, Import sorting
+select = ["E", "F", "I", "UP", "DJ"]
 ignore = ["E501"]  # Ignore long line errors (optional)
 
 [tool.ruff.format]

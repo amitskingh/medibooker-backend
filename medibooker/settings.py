@@ -41,7 +41,24 @@ DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://172.19.0.2:5173",
+]
+
+# CORS_ALLOW_CREDENTIALS = True
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://172.19.0.2:5173",
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://172.19.0.2:5173",
+# ]
 
 AUTH_USER_MODEL = "accounts.User"
 
