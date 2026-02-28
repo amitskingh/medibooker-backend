@@ -116,6 +116,10 @@ DATABASES = {
         "PASSWORD": POSTGRES_PASSWORD,
         "HOST": POSTGRES_HOST,
         "PORT": POSTGRES_PORT,
+        "OPTIONS": {
+            "sslmode": "require",
+            "channel_binding": "require",
+        },
     },
 }
 
