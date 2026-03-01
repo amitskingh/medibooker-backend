@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
@@ -6,11 +8,16 @@ from django.db import models
 
 from .managers import UserManager
 
-
 # -------------------------
 # Custom User Model
 # -------------------------
+
+def user_profile_upload_path(instance, filename):
+    # This function defines the upload path for user profile images
+    return f"profiles/user_{instance.id}/{filename}"
+
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     ROLE_CHOICES = (
         ("doctor", "Doctor"),
         ("patient", "Patient"),
@@ -24,7 +31,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
+
+    profile_url = models.ImageField(upload_to=user_profile_upload_path, null=True, blank=True)
 
     objects = UserManager()
 
@@ -43,6 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 # Doctor Profile
 # -------------------------
 class Doctor(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     SPECIALIZATION_CHOICES = [
         ("cardiology", "Cardiology"),
         ("dermatology", "Dermatology"),
@@ -62,6 +71,7 @@ class Doctor(models.Model):
 # Patient Profile
 # -------------------------
 class Patient(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="patient_profile")
     phone_number = models.CharField(max_length=20)
 
