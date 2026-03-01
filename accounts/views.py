@@ -119,3 +119,37 @@ class UserProfile(APIView):
 
         serializer = UserSerializer(user)
         return success_response("User profile fetched", serializer.data)
+
+    def patch(self, request):
+        user = request.user
+        data = request.data.dict()
+
+        user_fields = {}
+
+        for field in ("first_name", "last_name"):
+            if field in data:
+                user_fields[field] = data.pop(field)
+
+        if "profile_url" in request.FILES:
+            user_fields["profile_url"] = request.FILES["profile_url"]
+
+        if user_fields:
+            data["user"] = user_fields
+
+        profile_instance = (
+            user.doctor_profile if user.role == "doctor"
+            else user.patient_profile
+        )
+
+        serializer_class = (
+            DoctorSerializer if user.role == "doctor"
+            else PatientSerializer
+        )
+
+        serializer = serializer_class(profile_instance, data=data, partial=True)
+
+        if not serializer.is_valid():
+            return error_response("Validation error", serializer.errors, status=400)
+
+        serializer.save()
+        return success_response("Profile updated", serializer.data, status=200)

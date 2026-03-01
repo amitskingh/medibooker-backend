@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from accounts.models import Doctor, Patient
@@ -5,6 +7,7 @@ from slots.models import Slot
 
 
 class Appointment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     STATUS_CHOICES = [
         ("BOOKED", "Booked"),
         ("VISITED", "Visited"),
