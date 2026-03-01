@@ -11,10 +11,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ["id", "email", "first_name", "last_name", "full_name", "role"]
+        fields = ["id", "email", "first_name", "last_name", "full_name", "role", "profile_url", "profile_path"]
 
     def get_full_name(self, obj):
         return obj.full_name
+
+
+class UserUpdateSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        read_only_fields = ["email", "role"]
 
 
 class DoctorSerializer(serializers.ModelSerializer):
@@ -22,19 +27,41 @@ class DoctorSerializer(serializers.ModelSerializer):
         source="get_specialization_display", read_only=True
     )
 
-    user = UserSerializer(read_only=True)
+    user = UserUpdateSerializer()
 
     class Meta:
         model = Doctor
         fields = ["id", "specialization", "specialization_display", "user"]
 
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user", None)
+        instance = super().update(instance, validated_data)
+
+        if user_data:
+            for attr, value in user_data.items():
+                setattr(instance.user, attr, value)
+            instance.user.save()
+
+        return instance
+
 
 class PatientSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserUpdateSerializer()
 
     class Meta:
         model = Patient
         fields = ["id", "phone_number", "user"]
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user", None)
+        instance = super().update(instance, validated_data)
+
+        if user_data:
+            for attr, value in user_data.items():
+                setattr(instance.user, attr, value)
+            instance.user.save()
+
+        return instance
 
 
 class DoctorRegisterSerializer(serializers.Serializer):
