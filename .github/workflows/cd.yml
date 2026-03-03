@@ -1,0 +1,28 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/medibooker-backend
+            git fetch origin
+            git checkout prod
+            git reset --hard origin/prod
+            docker-compose -f docker-compose.prod.yml down
+            docker-compose -f docker-compose.prod.yml up --build -d
