@@ -13,6 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Docker Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Build Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/medibooker-backend:latest .
+
+      - name: Push Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/medibooker-backend:latest
+
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -25,4 +34,4 @@ jobs:
             git checkout prod
             sudo git reset --hard origin/prod
             docker compose -f docker-compose.prod.yml down
-            docker compose -f docker-compose.prod.yml up --build -d
+            docker compose -f docker-compose.prod.yml up -d
