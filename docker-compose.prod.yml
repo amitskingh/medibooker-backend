@@ -23,5 +23,16 @@ services:
 
     restart: always
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /var/www/medibooker:/var/www/medibooker
+    depends_on:
+      - web
+
 volumes:
   media_data:
