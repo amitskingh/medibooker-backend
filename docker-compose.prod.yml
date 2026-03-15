@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  backend:
+  web:
     build: .
     container_name: django_app
     command: >
