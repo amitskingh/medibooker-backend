@@ -23,6 +23,6 @@ jobs:
             cd /home/ubuntu/medibooker-backend
             git fetch origin
             git checkout prod
-            git reset --hard origin/prod
-            docker-compose -f docker-compose.prod.yml down
-            docker-compose -f docker-compose.prod.yml up --build -d
+            sudo git reset --hard origin/prod
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml up --build -d
