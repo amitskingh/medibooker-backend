@@ -35,13 +35,21 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1", # Localhost IP address, allowing access from the host machine
+    "192.168.49.2", # Minikube IP address, allowing access from the host machine
+]
 
 CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://192.168.49.2:30000" # Minikube IP address with NodePort, allowing access from the host machine to the frontend running in Minikube
 ]
+
+# ALLOWED_HOSTS = ["*"]
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # CORS_ALLOW_CREDENTIALS = True
 
@@ -75,9 +83,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
